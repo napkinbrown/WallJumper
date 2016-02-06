@@ -8,18 +8,11 @@ public class PlayerController : MonoBehaviour {
 	public float runSpeed;
 	public float jumpSpeed;
 	
-	public float platformDistanceX;
-	public float platformDistanceY;	
-	public GameObject platform;
-	
 	private bool canJump = true;
 	
 	void Start () 
 	{
 		rb.GetComponent<Rigidbody2D> ();
-		platform.GetComponent<GameObject>();
-		
-		Instantiate(platform,new Vector2(transform.position.x + platformDistanceX, transform.position.y + platformDistanceY),Quaternion.identity); //sets up platform
 	}
 
 	void FixedUpdate()
@@ -33,18 +26,13 @@ public class PlayerController : MonoBehaviour {
 			canJump = false;
 		}
 		
-		PlatformUpdate();
 	}
 	void OnCollisionEnter2D (Collision2D other) //Resets jump
 	{
 		if (other.collider.CompareTag("Boundary"))
 			canJump = true;
 	}
-	private void PlatformUpdate() //Takes the position of the mouse and sets the player platform to that position but on a set radius
-	{
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //Finds where 
-		//Debug.Log(ray);
-	}
+
 
 
 }
