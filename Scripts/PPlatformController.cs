@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PPlatformController : MonoBehaviour {
 	
-	public float radius;
+	public float radius = 1.0f;
 	public GameObject platform;
 	public GameObject placedPlatform;
 	
@@ -13,7 +13,6 @@ public class PPlatformController : MonoBehaviour {
 	
 	void Start () 
 	{
-		Cursor.visible = false;
 		platform.GetComponent<GameObject>();
 		thisPlatform = (GameObject)Instantiate(platform,new Vector2(transform.position.x + radius, transform.position.y + radius),Quaternion.identity); //sets up platform
 	}
@@ -22,11 +21,16 @@ public class PPlatformController : MonoBehaviour {
 		//Finds where the player and the mouse is on the screen
 		Vector2 mousePosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 		Vector2 playerPosition = Camera.main.WorldToViewportPoint(transform.position);
-		float angleToMouse = Vector2.Angle(playerPosition,mousePosition); //Finds the angle between the character and the mouse
+		Vector2 playerToMouse = mousePosition - playerPosition;
+		float angleToMouse = Vector2.Angle(playerToMouse,Vector2.right) * Mathf.PI / 180; //Finds the angle between the character and the mouse
 		
-		Debug.Log(angleToMouse); //VECTOR2.ANGLE IS WRONG
+		if (mousePosition.y < playerPosition.y)//If the mouse falls below the player, make it go underneith
+			angleToMouse = -angleToMouse;
 		
-		/* Vector2 platformPosition = new Vector2(xPlatformPos,yPlatformPos); // sets the platform where it should go rotation wise
+		float xPlatformPos = radius * Mathf.Cos (angleToMouse); 
+		float yPlatformPos = radius * Mathf.Sin (angleToMouse);
+		
+		Vector2 platformPosition = new Vector2(xPlatformPos,yPlatformPos); // sets the platform where it should go rotation wise
 		Vector2 playerTransform2D = new Vector2(transform.position.x,transform.position.y); //converts transform.postion to Vector2
 		thisPlatform.transform.position = platformPosition + playerTransform2D;
 		
@@ -37,6 +41,6 @@ public class PPlatformController : MonoBehaviour {
 		if ((canPlacePlatform) && (Input.GetMouseButtonDown(0)))
 		{
 			Instantiate(placedPlatform,thisPlatform.transform.position,thisPlatform.transform.rotation);
-		} */
+		}
 	}
 }
